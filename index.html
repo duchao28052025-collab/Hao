@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <title>Đăng nhập và 10 Download (Placeholder)</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+    .card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);width:360px;text-align:center}
+    input{width:88%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:8px}
+    .btn{display:inline-block;width:88%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:#2563eb;color:#fff;cursor:pointer}
+    .btn.secondary{background:#6b7280}
+    .functions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+    .dl-btn{padding:8px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
+    .note{font-size:13px;color:#6b7280;margin-top:8px}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="card" id="loginCard">
+    <h2>Đăng nhập</h2>
+    <input id="username" placeholder="Tên đăng nhập" />
+    <input id="password" type="password" placeholder="Mật khẩu" />
+    <button class="btn" onclick="login()">Đăng nhập</button>
+    <p id="err" style="color:#ef4444"></p>
+    <p class="note">Demo: user = <b>admin</b> | pass = <b>123</b></p>
+  </div>
+
+  <div class="card hidden" id="appCard" style="width:640px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Downloads (placeholder)</h2>
+      <div>
+        <button class="btn secondary" onclick="logout()">Đăng xuất</button>
+      </div>
+    </div>
+
+    <p class="note">Mình không hỗ trợ hack/cheat. Các file bên dưới là tệp mẫu — anh có thể thay bằng file hợp pháp của anh.</p>
+
+    <div id="functions" class="functions"></div>
+  </div>
+
+  <script>
+    const USERNAME = "admin";
+    const PASSWORD = "123";
+
+    function login(){
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value;
+      const err = document.getElementById("err");
+      if(u === USERNAME && p === PASSWORD){
+        err.innerText = "";
+        document.getElementById("loginCard").classList.add("hidden");
+        document.getElementById("appCard").classList.remove("hidden");
+        loadDownloads();
+      } else {
+        err.innerText = "Sai tài khoản hoặc mật khẩu.";
+      }
+    }
+
+    function logout(){
+      document.getElementById("appCard").classList.add("hidden");
+      document.getElementById("loginCard").classList.remove("hidden");
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    // Tạo 10 nút download placeholder
+    function loadDownloads(){
+      const container = document.getElementById("functions");
+      container.innerHTML = "";
+      for(let i=1;i<=10;i++){
+        const btn = document.createElement("button");
+        btn.className = "dl-btn";
+        btn.innerText = "Download File " + i;
+        // Khi click sẽ tạo tệp placeholder và tải về
+        btn.addEventListener("click", ()=> {
+          const filename = "placeholder-file-" + i + ".txt";
+          const content = [
+            "Tệp mẫu (placeholder)",
+            "",
+            "Lưu ý:",
+            "- Mình không cung cấp hoặc hỗ trợ hack/cheat cho Roblox hay bất kỳ nền tảng nào.",
+            "- Nếu bạn thấy tệp này ngoài đời thực, hãy đảm bảo nội dung hợp pháp trước khi sử dụng.",
+            "",
+            "Bạn có thể thay tệp này bằng tệp hợp pháp của bạn (ví dụ file asset, hướng dẫn, v.v.)."
+          ].join("\\n");
+          downloadTextFile(filename, content);
+        });
+        container.appendChild(btn);
+      }
+    }
+
+    // Hàm tải file text (an toàn, client-side)
+    function downloadTextFile(filename, text){
+      const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
